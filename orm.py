@@ -21,7 +21,7 @@ class Model:
     def fetch(self):
         connection,cursor=getConnection()
         cursor.execute("select * from inventory")
-        rows=cursor.fetchall()
+        rows=cursor.fetchall()                      # ye bas usi table ka data fetch karta he jiska jisko execute kiya he
         connection.close()
         return rows
     
@@ -70,13 +70,18 @@ class Model:
         return rows
 
     def search(self,input1,input2):
+      try:    
         connection,cursor=getConnection()
-        cursor.execute(f'select * from inventory where {input1}="{input2}"')       # jo input1 he isko string se wrap taki sql me bhi string se wrap nahi hota
-        rows=cursor.fetchall()                                                     # aur jo input2 he isko string se wrap karte he taki sql me bhi string se wrap hota he
+
+        if (input1 in ["item_name","quantity", "price"]):
+            cursor.execute(f'select * from inventory where {input1}="{input2}"')         # jo input1 he isko string se wrap nahi karte taki sql me bhi string se wrap nahi hota     
+        else:                                                                            # aur jo input2 he isko string se wrap karte he taki sql me bhi string se wrap hota he
+            cursor.execute(f"select * from inventory where item_ID={input2}")                                                          
+        rows=cursor.fetchall()  
         connection.close()
         return rows
-
-
+      except:
+          print("unable to fetch data")
 
 # connect ke bohot sare methods hote he cursor(), commit(), close() aur bhi 
 
@@ -84,10 +89,5 @@ class Model:
 # close() iska use is liye karte he taki mysql ko close kar sake
 
 
-
-
-
-
-
-
+# mvt
 
